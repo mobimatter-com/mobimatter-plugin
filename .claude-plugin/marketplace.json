@@ -1,0 +1,19 @@
+{
+  "name": "mobimatter",
+  "description": "Agent skills for building on the MobiMatter eSIM API.",
+  "owner": {
+    "name": "MobiMatter LTD",
+    "url": "https://mobimatter.com"
+  },
+  "plugins": [
+    {
+      "name": "mobimatter",
+      "source": "./",
+      "description": "Generates MobiMatter eSIM integration code into your project — catalogue sync, ordering, top-ups, replacements, eSIM QR/LPA retrieval, usage checks and completion webhooks — built against the live API contract at docs.mobimatter.com.",
+      "version": "0.1.0",
+      "author": {
+        "name": "MobiMatter LTD"
+      }
+    }
+  ]
+}

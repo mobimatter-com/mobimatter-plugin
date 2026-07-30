@@ -1,0 +1,34 @@
+{
+  "name": "mobimatter",
+  "version": "0.1.0",
+  "description": "Generates MobiMatter eSIM integration code into your project — catalogue sync, ordering, top-ups, replacements, eSIM QR/LPA retrieval, usage checks and completion webhooks — built against the live API contract at docs.mobimatter.com.",
+  "author": {
+    "name": "MobiMatter LTD",
+    "url": "https://mobimatter.com"
+  },
+  "homepage": "https://docs.mobimatter.com",
+  "repository": "https://github.com/mobimatter-com/mobimatter-plugin",
+  "keywords": [
+    "esim",
+    "mobimatter",
+    "telecom",
+    "travel",
+    "api-integration",
+    "data-plans"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "MobiMatter eSIM API",
+    "shortDescription": "Build eSIM ordering and provisioning into your app",
+    "longDescription": "Adds MobiMatter's eSIM API to your project: browse the plan catalogue, create orders, provision eSIMs, issue top-ups and replacements, fetch QR codes and LPA activation strings, check data usage, and handle order webhooks. Built against the live API contract at docs.mobimatter.com.",
+    "developerName": "MobiMatter LTD",
+    "category": "Developer Tools",
+    "capabilities": ["Write"],
+    "websiteURL": "https://mobimatter.com",
+    "defaultPrompt": [
+      "Add MobiMatter eSIM plan browsing to this app.",
+      "Create a MobiMatter order and return the eSIM QR code.",
+      "Handle MobiMatter order completion webhooks."
+    ]
+  }
+}

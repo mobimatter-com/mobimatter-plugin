@@ -1,0 +1,188 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "MobiMatter Provider Info API",
+        "version": "v2"
+    },
+    "servers": [
+        {
+            "url": "https://api.mobimatter.com/mobimatter",
+            "description": "Production"
+        }
+    ],
+    "paths": {
+        "/api/v{version}/provider/info/{orderId}": {
+            "get": {
+                "tags": [
+                    "Provider"
+                ],
+                "summary": "Get structured eSIM usage",
+                "parameters": [
+                    {
+                        "name": "orderId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "version",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
+        "/api/v{version}/provider/sms/{orderId}": {
+            "post": {
+                "tags": [
+                    "Provider"
+                ],
+                "summary": "Send SMS to eSIM",
+                "parameters": [
+                    {
+                        "name": "orderId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "version",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SendSMSModel"
+                            }
+                        },
+                        "text/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SendSMSModel"
+                            }
+                        },
+                        "application/*+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SendSMSModel"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
+        "/api/v2/order/refund": {
+            "put": {
+                "tags": [
+                    "Order"
+                ],
+                "summary": "Refund order",
+                "parameters": [
+                    {
+                        "name": "merchantId",
+                        "in": "header",
+                        "description": "MerchantId of requester",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RefundOrderModel"
+                            }
+                        },
+                        "text/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RefundOrderModel"
+                            }
+                        },
+                        "application/*+json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RefundOrderModel"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "202": {
+                        "description": "Marked for refund"
+                    },
+                    "400": {
+                        "description": "Ineligible for refund"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "RefundOrderModel": {
+                "required": [
+                    "orderId"
+                ],
+                "type": "object",
+                "properties": {
+                    "orderId": {
+                        "type": "string"
+                    }
+                },
+                "additionalProperties": false
+            },
+            "SendSMSModel": {
+                "required": [
+                    "text"
+                ],
+                "type": "object",
+                "properties": {
+                    "text": {
+                        "type": "string"
+                    }
+                },
+                "additionalProperties": false
+            }
+        },
+        "securitySchemes": {
+            "api-key": {
+                "type": "apiKey",
+                "description": "Enter Api Key to access APIs",
+                "name": "api-key",
+                "in": "header"
+            }
+        }
+    },
+    "security": [
+        {
+            "api-key": []
+        }
+    ],
+    "x-readme": {
+        "explorer-enabled": true,
+        "proxy-enabled": true,
+        "samples-enabled": true
+    }
+}

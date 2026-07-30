@@ -1,0 +1,5 @@
+# Transient spec fetches from mm.sh. The committed snapshots are the contract.
+skills/mobimatter-api/references/*.live.yaml
+skills/mobimatter-api/references/*.live.json
+
+.DS_Store

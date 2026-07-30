@@ -1,0 +1,1141 @@
+openapi: 3.0.1
+info:
+  title: MobiMatter Core API
+  version: v2
+servers:
+  - url: https://api.mobimatter.com/mobimatter
+    description: MobiMatter API
+paths:
+  /api/v2/merchant/balance:
+    get:
+      tags:
+        - Merchant
+      summary: Get wallet balance
+      parameters:
+        - name: merchantId
+          in: header
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/WalletBalanceResponseModelSuccessResponseModel'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WalletBalanceResponseModelSuccessResponseModel'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/WalletBalanceResponseModelSuccessResponseModel'
+  /api/v2/email:
+    post:
+      tags:
+        - Notify
+      summary: Send order confirmation to customer
+      parameters:
+        - name: merchantId
+          in: header
+          schema:
+            type: string
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationRequestVm'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/NotificationRequestVm'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/NotificationRequestVm'
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/StringSuccessResponseModel'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StringSuccessResponseModel'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/StringSuccessResponseModel'
+  /api/v2/order/{orderId}:
+    get:
+      tags:
+        - Order
+      summary: Get order information
+      description: Get order information, returns order information along with an order label if it was provided while creating the order. For more information, see "Create an order".
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: merchantId
+          in: header
+          schema:
+            type: string
+          required: true
+        - name: returnProductDetails
+          in: query
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/OrderViewModelSuccessResponseModel'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderViewModelSuccessResponseModel'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/OrderViewModelSuccessResponseModel'
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseModel'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseModel'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseModel'
+  /api/v2/order:
+    get:
+      tags:
+        - Order
+      summary: Get order by ICCID
+      description: Get order by ICCID, returns order information along with an order label if it was provided while creating the order. For more information, see "Create an order".
+      parameters:
+        - name: merchantId
+          in: header
+          schema:
+            type: string
+          required: true
+        - name: iccid
+          in: query
+          required: true
+          schema:
+            pattern: ^89\d+$
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/OrderViewModelSuccessResponseModel'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderViewModelSuccessResponseModel'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/OrderViewModelSuccessResponseModel'
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseModel'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseModel'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseModel'
+    post:
+      tags:
+        - Order
+      summary: Create an order
+      description: Create an order, this method allows you to pass an optional ```label``` for the order in the payload which may be an external identifier that helps searching an order using its label via the merchant portal.
+      parameters:
+        - name: merchantId
+          in: header
+          schema:
+            type: string
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrderModelV2'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrderModelV2'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/CreateOrderModelV2'
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/NewOrderResponseModelSuccessResponseModel'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NewOrderResponseModelSuccessResponseModel'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/NewOrderResponseModelSuccessResponseModel'
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseModel'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseModel'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseModel'
+  /api/v2/order/complete:
+    put:
+      tags:
+        - Order
+      summary: Complete order
+      parameters:
+        - name: merchantId
+          in: header
+          schema:
+            type: string
+          required: true
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompleteOrderModelV2'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CompleteOrderModelV2'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/CompleteOrderModelV2'
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/OrderViewModelSuccessResponseModel'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderViewModelSuccessResponseModel'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/OrderViewModelSuccessResponseModel'
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseModel'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseModel'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseModel'
+  /api/v2/order/cancel:
+    put:
+      tags:
+        - Order
+      summary: Cancel order
+      description: Cancel order, this method will transition the order into a 'Cancelled' state, works only if the order is currently in the 'Created' state.
+      parameters:
+        - name: merchantId
+          in: header
+          schema:
+            type: string
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CancelOrderModel'
+          text/json:
+            schema:
+              $ref: '#/components/schemas/CancelOrderModel'
+          application/*+json:
+            schema:
+              $ref: '#/components/schemas/CancelOrderModel'
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/StringSuccessResponseModel'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StringSuccessResponseModel'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/StringSuccessResponseModel'
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseModel'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseModel'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseModel'
+  /api/v2/order/{orderId}/refund/eligibility:
+    get:
+      tags:
+        - Order
+      summary: Check if order is refundable
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: merchantId
+          in: header
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/RefundEligibilityResponseSuccessResponseModel'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefundEligibilityResponseSuccessResponseModel'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/RefundEligibilityResponseSuccessResponseModel'
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseModel'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseModel'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseModel'
+  /api/v2/products/{productId}/networks:
+    get:
+      tags:
+        - Product
+      summary: Get a list of networks that a product connects to.
+      parameters:
+        - name: merchantId
+          in: header
+          schema:
+            type: string
+          required: true
+        - name: productId
+          in: path
+          description: Get network list for the product id
+          required: true
+          schema:
+            type: string
+          example: 9f0d2dcb-31d7-46d0-846d-bb68aa710e7e
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/NetworkListAssignmentModelListSuccessResponseModel'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NetworkListAssignmentModelListSuccessResponseModel'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/NetworkListAssignmentModelListSuccessResponseModel'
+  /api/v2/products:
+    get:
+      tags:
+        - Product
+      summary: Search or retrieve all available products for merchant.
+      parameters:
+        - name: merchantId
+          in: header
+          schema:
+            type: string
+          required: true
+        - name: productId
+          in: query
+          description: Filter by product id
+          schema:
+            type: string
+          example: 9f0d2dcb-31d7-46d0-846d-bb68aa710e7e
+        - name: country
+          in: query
+          description: Filter by country (ISO 2-letter code)
+          schema:
+            type: string
+          example: AE
+        - name: region
+          in: query
+          description: Filter by region
+          schema:
+            type: string
+          example: Asia | Oceania | Middle East | Africa | Europe
+        - name: provider
+          in: query
+          description: Filter by provider name
+          schema:
+            type: string
+          example: '3'
+        - name: category
+          in: query
+          description: Filter by product category
+          schema:
+            type: string
+          example: esim_realtime | esim_addon | esim_replacement
+        - name: familyId
+          in: query
+          description: Filter by product family
+          schema:
+            type: integer
+            format: int32
+          example: 5
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/MerchantProductResponeModelListSuccessResponseModel'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MerchantProductResponeModelListSuccessResponseModel'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/MerchantProductResponeModelListSuccessResponseModel'
+  /api/v2/provider/usage/{orderId}:
+    get:
+      tags:
+        - Provider
+      summary: Get usage information about an order
+      parameters:
+        - name: orderId
+          in: path
+          description: order id
+          required: true
+          schema:
+            type: string
+          example: XYZ-234892
+        - name: merchantId
+          in: header
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ProviderOrderQueryModel'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProviderOrderQueryModel'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ProviderOrderQueryModel'
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseModel'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseModel'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseModel'
+  /api/v2/provider/info/{orderId}:
+    get:
+      tags:
+        - Provider
+      summary: Get structued usage and esim information about an order
+      parameters:
+        - name: orderId
+          in: path
+          description: order id
+          required: true
+          schema:
+            type: string
+          example: XYZ-234892
+        - name: merchantId
+          in: header
+          schema:
+            type: string
+          required: true
+        - name: skipLocation
+          in: query
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: Success
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/StructuredEsimInfoSuccessResponseModel'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StructuredEsimInfoSuccessResponseModel'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/StructuredEsimInfoSuccessResponseModel'
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseModel'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseModel'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseModel'
+components:
+  schemas:
+    CancelOrderModel:
+      required:
+        - orderId
+        - reason
+      type: object
+      properties:
+        orderId:
+          minLength: 1
+          type: string
+        reason:
+          minLength: 1
+          type: string
+      additionalProperties: false
+    CompleteOrderModelV2:
+      required:
+        - orderId
+      type: object
+      properties:
+        orderId:
+          minLength: 1
+          type: string
+        notes:
+          type: string
+          nullable: true
+      additionalProperties: false
+    CreateOrderModelV2:
+      required:
+        - productId
+      type: object
+      properties:
+        productId:
+          minLength: 1
+          type: string
+          example: 9f0d2dcb-31d7-46d0-846d-bb68aa710e7e
+        productCategory:
+          type: string
+          nullable: true
+          example: 'esim_realtime | esim_delayed | physical_sim | esim_addon | esim_replacement '
+        addOnOrderIdentifier:
+          type: string
+          nullable: true
+          example: XYZ-234893
+        label:
+          type: string
+          nullable: true
+        callbackUrl:
+          pattern: ^https://.*
+          type: string
+          description: "Optional callback URL for webhook notification on order completion.\r\nOnly used for esim_replacement and esim_delayed product categories.\r\nMust be a valid HTTPS URL."
+          format: uri
+          nullable: true
+      additionalProperties: false
+    Customer:
+      type: object
+      properties:
+        id:
+          type: string
+          nullable: true
+        name:
+          type: string
+          nullable: true
+        email:
+          type: string
+          format: email
+          nullable: true
+        ccEmail:
+          type: string
+          format: email
+          nullable: true
+        phone:
+          type: string
+          nullable: true
+      additionalProperties: false
+    Details:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: true
+        value:
+          type: string
+          nullable: true
+      additionalProperties: false
+    DisplayAttributes:
+      type: object
+      properties:
+        key:
+          type: string
+          nullable: true
+        value:
+          type: string
+          nullable: true
+      additionalProperties: false
+    ErrorResponseModel:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
+          example: 400
+        message:
+          type: string
+          nullable: true
+      additionalProperties: false
+    Esim:
+      type: object
+      properties:
+        status:
+          type: string
+          nullable: true
+        smdpCode:
+          type: string
+          nullable: true
+        installationDate:
+          type: string
+          format: date-time
+          nullable: true
+        location:
+          $ref: '#/components/schemas/Location'
+        kycStatus:
+          type: string
+          nullable: true
+        iccid:
+          type: string
+          nullable: true
+        phoneNumber:
+          type: string
+          nullable: true
+        puk:
+          type: string
+          nullable: true
+        isSuspended:
+          type: boolean
+          nullable: true
+        wallet:
+          $ref: '#/components/schemas/Wallet'
+      additionalProperties: false
+    LineItemDetail:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: true
+          example: QR_CODE
+        value:
+          type: string
+          nullable: true
+          example: data:image/png;base64,abcdefg===
+      additionalProperties: false
+    Location:
+      type: object
+      properties:
+        updated:
+          type: string
+          format: date-time
+          nullable: true
+        country:
+          type: string
+          nullable: true
+        network:
+          type: string
+          nullable: true
+      additionalProperties: false
+    MerchantProductResponeModel:
+      type: object
+      properties:
+        merchantId:
+          type: string
+          nullable: true
+        uniqueId:
+          type: string
+          nullable: true
+        productId:
+          type: string
+          nullable: true
+        rank:
+          type: integer
+          format: int32
+        productCategoryId:
+          type: integer
+          format: int32
+        productFamilyId:
+          type: integer
+          format: int32
+        networkListId:
+          type: integer
+          format: int64
+          nullable: true
+        productFamilyName:
+          type: string
+          nullable: true
+        productCategory:
+          type: string
+          nullable: true
+        providerId:
+          type: integer
+          format: int32
+        providerName:
+          type: string
+          nullable: true
+        providerLogo:
+          type: string
+          nullable: true
+        retailPrice:
+          type: number
+          format: double
+        wholesalePrice:
+          type: number
+          format: double
+        currencyCode:
+          type: string
+          nullable: true
+        created:
+          type: string
+          format: date-time
+        updated:
+          type: string
+          format: date-time
+        regions:
+          type: array
+          items:
+            type: string
+          nullable: true
+        countries:
+          type: array
+          items:
+            type: string
+          nullable: true
+        displayAttributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/DisplayAttributes'
+          nullable: true
+        productDetails:
+          type: array
+          items:
+            $ref: '#/components/schemas/Details'
+          nullable: true
+      additionalProperties: false
+    MerchantProductResponeModelListSuccessResponseModel:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
+          example: 200
+        result:
+          type: array
+          items:
+            $ref: '#/components/schemas/MerchantProductResponeModel'
+          nullable: true
+      additionalProperties: false
+    NetworkListAssignmentModel:
+      type: object
+      properties:
+        networkId:
+          type: integer
+          format: int64
+        brand:
+          type: string
+          nullable: true
+        tadig:
+          type: string
+          nullable: true
+        is4G:
+          type: boolean
+        is5G:
+          type: boolean
+        countryCode:
+          type: string
+          nullable: true
+      additionalProperties: false
+    NetworkListAssignmentModelListSuccessResponseModel:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
+          example: 200
+        result:
+          type: array
+          items:
+            $ref: '#/components/schemas/NetworkListAssignmentModel'
+          nullable: true
+      additionalProperties: false
+    NewOrderResponseModel:
+      type: object
+      properties:
+        orderId:
+          type: string
+          nullable: true
+        productCategory:
+          type: string
+          nullable: true
+      additionalProperties: false
+    NewOrderResponseModelSuccessResponseModel:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
+          example: 200
+        result:
+          $ref: '#/components/schemas/NewOrderResponseModel'
+      additionalProperties: false
+    NotificationRequestVm:
+      required:
+        - orderId
+      type: object
+      properties:
+        orderId:
+          minLength: 1
+          type: string
+        customer:
+          $ref: '#/components/schemas/Customer'
+        amountCharged:
+          type: number
+          format: double
+          nullable: true
+        currency:
+          type: string
+          nullable: true
+        merchantOrderId:
+          type: string
+          nullable: true
+      additionalProperties: false
+    OneClickInstall:
+      type: object
+      properties:
+        ios:
+          type: string
+          nullable: true
+          example: https://esimsetup.apple.com/esim_qrcode_provisioning?carddata=LPA:1$smdp.io$ABC-123
+        android:
+          type: string
+          nullable: true
+          example: https://esimsetup.android.com/esim_qrcode_provisioning?carddata=LPA:1$smdp.io$ABC-123
+      additionalProperties: false
+    OrderLineItem:
+      type: object
+      properties:
+        productId:
+          type: string
+          nullable: true
+          example: 9f0d2dcb-31d7-46d0-846d-bb68aa710e7e
+        productCategory:
+          type: string
+          nullable: true
+          example: 'esim_realtime | esim_delayed | physical_sim | esim_addon | esim_replacement '
+        productFamilyName:
+          type: string
+          nullable: true
+        productFamilyId:
+          type: string
+          nullable: true
+        title:
+          type: string
+          nullable: true
+          example: UK 10 GB
+        provider:
+          type: string
+          nullable: true
+          example: '12'
+        providerName:
+          type: string
+          nullable: true
+          example: Ubigi
+        providerLogo:
+          type: string
+          nullable: true
+          example: https://d2tlmlryquimxf.cloudfront.net/mobimatter-assests/assets/ubigi.png
+        retailPrice:
+          type: number
+          format: double
+          example: 15.2
+        wholesalePrice:
+          type: number
+          format: double
+          example: 10.4
+        lineItemDetails:
+          type: array
+          items:
+            $ref: '#/components/schemas/LineItemDetail'
+          nullable: true
+        oneClickInstall:
+          $ref: '#/components/schemas/OneClickInstall'
+      additionalProperties: false
+    OrderViewModel:
+      type: object
+      properties:
+        orderId:
+          type: string
+          nullable: true
+          example: XYZ-29482
+        orderState:
+          type: string
+          nullable: true
+          example: Created | Completed | Expired | Cancelled | Processing
+        merchantId:
+          type: string
+          nullable: true
+          example: 9f0d2dcb-31d7-46d0-846d-bb68aa710e7eg
+        externalId:
+          type: string
+          nullable: true
+          example: ''
+        currencyCode:
+          type: string
+          nullable: true
+          example: USD
+        created:
+          type: string
+          format: date-time
+        updated:
+          type: string
+          format: date-time
+          nullable: true
+        orderLineItem:
+          $ref: '#/components/schemas/OrderLineItem'
+        label:
+          type: string
+          nullable: true
+      additionalProperties: false
+    OrderViewModelSuccessResponseModel:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
+          example: 200
+        result:
+          $ref: '#/components/schemas/OrderViewModel'
+      additionalProperties: false
+    Package:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: true
+        associatedProductId:
+          type: string
+          format: uuid
+          nullable: true
+        activationDate:
+          type: string
+          format: date-time
+          nullable: true
+        expirationDate:
+          type: string
+          format: date-time
+          nullable: true
+        totalAllowanceMb:
+          type: integer
+          format: int64
+          nullable: true
+        totalAllowanceMin:
+          type: integer
+          format: int64
+          nullable: true
+        usedMin:
+          type: integer
+          format: int64
+          nullable: true
+        usedMb:
+          type: integer
+          format: int64
+          nullable: true
+      additionalProperties: false
+    ProviderOrderQueryModel:
+      type: object
+      properties:
+        orderId:
+          type: string
+          nullable: true
+        merchantId:
+          type: string
+          nullable: true
+        planName:
+          type: string
+          nullable: true
+        planData:
+          type: string
+          nullable: true
+        validityDays:
+          type: string
+          nullable: true
+        rechargeable:
+          type: boolean
+        providerInfo:
+          $ref: '#/components/schemas/ProviderQueryModel'
+      additionalProperties: false
+    ProviderQueryData:
+      type: object
+      properties:
+        activationDate:
+          type: string
+          nullable: true
+        expirationDate:
+          type: string
+          nullable: true
+        status:
+          type: string
+          nullable: true
+        balance:
+          type: string
+          nullable: true
+        phone:
+          type: string
+          nullable: true
+      additionalProperties: false
+    ProviderQueryModel:
+      type: object
+      properties:
+        providerName:
+          type: string
+          nullable: true
+        providerLogo:
+          type: string
+          nullable: true
+        message:
+          type: string
+          nullable: true
+        data:
+          $ref: '#/components/schemas/ProviderQueryData'
+      additionalProperties: false
+    RefundEligibilityResponse:
+      type: object
+      properties:
+        isEligible:
+          type: boolean
+        fee:
+          type: number
+          format: double
+          nullable: true
+        reason:
+          type: string
+          nullable: true
+      additionalProperties: false
+    RefundEligibilityResponseSuccessResponseModel:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
+          example: 200
+        result:
+          $ref: '#/components/schemas/RefundEligibilityResponse'
+      additionalProperties: false
+    StringSuccessResponseModel:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
+          example: 200
+        result:
+          type: string
+          nullable: true
+      additionalProperties: false
+    StructuredEsimInfo:
+      type: object
+      properties:
+        ussdCode:
+          type: string
+          nullable: true
+        esim:
+          $ref: '#/components/schemas/Esim'
+        packages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Package'
+          nullable: true
+      additionalProperties: false
+    StructuredEsimInfoSuccessResponseModel:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
+          example: 200
+        result:
+          $ref: '#/components/schemas/StructuredEsimInfo'
+      additionalProperties: false
+    Wallet:
+      type: object
+      properties:
+        balanceHkd:
+          type: integer
+          format: int64
+      additionalProperties: false
+    WalletBalanceResponseModel:
+      type: object
+      properties:
+        balance:
+          type: number
+          format: double
+          example: 52.8
+      additionalProperties: false
+    WalletBalanceResponseModelSuccessResponseModel:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
+          example: 200
+        result:
+          $ref: '#/components/schemas/WalletBalanceResponseModel'
+      additionalProperties: false
+  securitySchemes:
+    api-key:
+      type: apiKey
+      description: Set api-key to access APIs
+      name: api-key
+      in: header
+security:
+  - api-key: []
