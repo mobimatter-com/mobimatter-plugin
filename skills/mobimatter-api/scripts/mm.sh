@@ -78,6 +78,18 @@ cmd_order_by_iccid() {
   get "/api/v2/order?iccid=$1"
 }
 
+cmd_linked() {
+  need "${1:-}" "usage: mm.sh linked <rootOrderId> [--completed-only|--completed-with-refunded]"
+  local q=""
+  case "${2:-}" in
+    --completed-only)          q="?completedOnly=true" ;;
+    --completed-with-refunded) q="?completedWithRefunded=true" ;;
+    "") ;;
+    *) die "linked: unknown option '$2'" ;;
+  esac
+  get "/api/v2/order/$1/linked$q"
+}
+
 cmd_usage() {
   need "${1:-}" "usage: mm.sh usage <orderId>"
   # Reaches through to the upstream provider. Do not loop this.
@@ -132,6 +144,7 @@ mm.sh -- read-only MobiMatter API access. Every subcommand is a GET.
   product-networks <productId>
   order <orderId> [--with-product-details]
   order-by-iccid <iccid>
+  linked <rootOrderId> [--completed-only|--completed-with-refunded]
   usage <orderId>                    # upstream provider call -- never loop
   esim-info <orderId> [--with-location]
   balance
@@ -150,6 +163,7 @@ case "${1:-}" in
   product-networks)    shift; cmd_product_networks "$@" ;;
   order)               shift; cmd_order "$@" ;;
   order-by-iccid)      shift; cmd_order_by_iccid "$@" ;;
+  linked)              shift; cmd_linked "$@" ;;
   usage)               shift; cmd_usage "$@" ;;
   esim-info)           shift; cmd_esim_info "$@" ;;
   balance)             shift; cmd_balance "$@" ;;

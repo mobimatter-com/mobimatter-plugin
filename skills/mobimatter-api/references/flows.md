@@ -176,6 +176,18 @@ top-up or replacement. Set at write time, never reassigned. Reading it is then a
 field access on any order in the chain, rather than a walk back through history
 that lands on B or D above.
 
+### `GET /order/{rootId}/linked` reconciles; it does not derive
+
+`GET /api/v2/order/A/linked` returns `[B, C, D, E]` above. Use it to check the
+stored chain against MobiMatter — find a top-up or replacement the project never
+persisted (a create that timed out, a support-issued top-up), or backfill the
+parent order id column on orders stored before it existed.
+
+It is not how the purchase path finds `addOnOrderIdentifier`. That is still the
+stored parent order id, read as a field. Linked orders goes the other direction —
+root to children — and takes the root as input, so a purchase path that needs it
+already had the answer.
+
 ## Replacements
 
 Same shape as a top-up with `category=esim_replacement`.
