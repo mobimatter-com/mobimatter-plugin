@@ -297,6 +297,58 @@ paths:
             text/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponseModel'
+  /api/v2/order/{orderId}/linked:
+    get:
+      tags:
+        - Order
+      summary: Get linked orders
+      description: Returns the ids of orders linked to the given order, for example add-ons purchased against it or eSIM replacements.
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: merchantId
+          in: header
+          schema:
+            type: string
+          required: true
+        - name: completedOnly
+          in: query
+          schema:
+            type: boolean
+            default: false
+        - name: completedWithRefunded
+          in: query
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/StringArraySuccessResponseModel'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StringArraySuccessResponseModel'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/StringArraySuccessResponseModel'
+        '400':
+          description: Bad Request
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseModel'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseModel'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponseModel'
   /api/v2/order/{orderId}/refund/eligibility:
     get:
       tags:
@@ -1070,6 +1122,19 @@ components:
           example: 200
         result:
           $ref: '#/components/schemas/RefundEligibilityResponse'
+      additionalProperties: false
+    StringArraySuccessResponseModel:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
+          example: 200
+        result:
+          type: array
+          items:
+            type: string
+          nullable: true
       additionalProperties: false
     StringSuccessResponseModel:
       type: object

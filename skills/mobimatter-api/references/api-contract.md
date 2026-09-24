@@ -115,8 +115,27 @@ automatically. Do not send a compensating cancel.
 | **`GET /api/v2/order?iccid=`** | Order by ICCID |
 | Returns | `{ statusCode, result: OrderViewModel }` |
 
+| | |
+|---|---|
+| **`GET /api/v2/order/{orderId}/linked`** | Ids of the top-ups and replacements bought against an order |
+| Query | `completedOnly` (boolean, default false), `completedWithRefunded` (boolean, default false) |
+| Returns | `{ statusCode, result: string[] }` — order ids only |
+
+Scoped by the `merchantId` header: the order must belong to the caller, and only
+the caller's own linked orders come back. An unknown order, or one owned by another
+merchant, returns **404** `order not found` — the spec lists only 200 and 400.
+
+- Pass the **root order id**. The platform files every top-up and replacement
+  directly under the original purchase, so a top-up's or replacement's own id
+  returns `[]`, not its siblings.
+- No flag: every state, including `Created`, `Expired` and `Cancelled`.
+  `completedOnly`: `Completed` only. `completedWithRefunded`: `Completed` plus
+  refunded. If both are set, `completedOnly` wins.
+- Unordered. Fetch each id with `GET /api/v2/order/{orderId}` for details.
+
 There is no endpoint that lists a merchant's orders. Orders are reachable only by
-`orderId` or `iccid`, so the partner must persist every `orderId` it creates.
+`orderId`, `iccid`, or as linked ids of a root order, so the partner must persist
+every `orderId` it creates.
 
 `OrderViewModel`: `orderId`, `orderState`, `merchantId`, `externalId`,
 `currencyCode`, `created`, `updated`, `label`, `orderLineItem`.
